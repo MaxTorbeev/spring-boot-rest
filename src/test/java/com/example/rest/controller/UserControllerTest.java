@@ -36,7 +36,6 @@ class UserControllerTest {
 
     @Test
     void registration() throws Exception {
-
         Gson gson = new Gson();
 
         UserEntity user = new UserEntity();

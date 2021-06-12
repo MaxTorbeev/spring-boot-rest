@@ -2,6 +2,7 @@ package com.example.rest.service;
 
 import com.example.rest.entity.UserEntity;
 import com.example.rest.exception.UserAlreadyExistException;
+import com.example.rest.exception.UserNotFoundException;
 import com.example.rest.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,15 @@ public class UserService {
         }
 
         return userRepo.save(user);
+    }
+
+    public UserEntity show(Long id) throws UserNotFoundException {
+        UserEntity user = userRepo.findById(id).get();
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        return user;
     }
 }
