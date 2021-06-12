@@ -27,12 +27,22 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registration(@RequestBody UserEntity user) {
+    public ResponseEntity<String> store(@RequestBody UserEntity user) {
         try {
-            userService.registration(user);
-            return ResponseEntity.ok("Пользователь успешно сохранен.");
+            userService.store(user);
+            return ResponseEntity.ok("User has been created.");
         } catch (UserAlreadyExistException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") long id) {
+        try {
+            userService.delete(id);
+            return ResponseEntity.ok("User has been deleted.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error");
         }

@@ -1,6 +1,7 @@
 package com.example.rest.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -10,6 +11,9 @@ public class UserEntity {
     private Long id;
     private String username;
     private String password;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<CategoryEntity> categories;
 
     public UserEntity() {
 

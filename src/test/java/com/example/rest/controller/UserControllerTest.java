@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
-@Sql(value = {"/migrations/users-truncate.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = {"/migrations/users-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class UserControllerTest {
     @Autowired
     private MockMvc mvc;
@@ -44,7 +44,7 @@ class UserControllerTest {
         String json = gson.toJson(User.toModel(model));
 
         RequestBuilder request = MockMvcRequestBuilders
-                .get("/users/1")
+                .get("/users/" + model.getId())
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -55,9 +55,7 @@ class UserControllerTest {
     }
 
     @Test
-    void registration() throws Exception {
-        Gson gson = new Gson();
-
+    void store() throws Exception {
         UserEntity user = new UserEntity();
         user.setUsername("test1");
         user.setPassword("test");
@@ -69,10 +67,28 @@ class UserControllerTest {
                 .content(params)
                 .contentType(MediaType.APPLICATION_JSON);
 
+        mvc.perform(request)
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().string(StringContains.containsString("User has been created.")))
+            .andReturn();
+    }
+
+    @Test
+    void delete() throws Exception {
+        UserEntity user = new UserEntity();
+        user.setUsername("test1");
+        user.setPassword("test");
+        userRepo.save(user);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .delete("/users/" + user.getId())
+                .contentType(MediaType.APPLICATION_JSON);
+
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(StringContains.containsString("Пользователь успешно сохранен.")))
+                .andExpect(MockMvcResultMatchers.content().string(StringContains.containsString("User has been deleted.")))
                 .andReturn();
     }
 }
