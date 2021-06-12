@@ -12,7 +12,8 @@ public class UserEntity {
     private String username;
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    cascade = CascadeType.ALL,
+    @OneToMany(mappedBy = "user")
     private List<CategoryEntity> categories;
 
     public UserEntity() {

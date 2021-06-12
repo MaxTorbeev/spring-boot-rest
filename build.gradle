@@ -15,12 +15,14 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'com.google.code.gson:gson:2.8.7' // working with json
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	testImplementation 'com.google.code.gson:gson:2.8.7'
+	testImplementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 test {

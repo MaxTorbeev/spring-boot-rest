@@ -6,13 +6,27 @@ import com.example.rest.exception.UserNotFoundException;
 import com.example.rest.model.User;
 import com.example.rest.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity user = userRepo.findByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return (UserDetails) user;
+    }
 
     public UserEntity store(UserEntity user) throws UserAlreadyExistException {
         if (userRepo.findByUsername(user.getUsername()) != null) {
